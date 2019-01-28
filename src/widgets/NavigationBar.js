@@ -8,31 +8,70 @@ import PropTypes from 'prop-types';
 import { Platform, TouchableOpacity, View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { textStyles } from '../globalStyles';
+import { BadgeSet } from './BadgeSet';
 
-export function NavigationBar({ onPressBack, LeftComponent, CentreComponent, RightComponent }) {
-  return (
-    <View style={localStyles.container} >
-      <View style={localStyles.leftSection}>
-        <TouchableOpacity onPress={onPressBack} style={localStyles.backButton}>
-          {onPressBack && <Icon name={'chevron-left'} style={localStyles.backIcon} />}
-        </TouchableOpacity>
-        {LeftComponent && <LeftComponent />}
+export class NavigationBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+  }
+
+  componentWillReceiveProps(props) {
+    const dataType = this.getDataTypeFromTitle(props);
+    if (dataType) this.refreshData(dataType);
+  }
+
+  getDataTypeFromTitle(props) {
+    switch (props.currentTitle) {
+      case 'Customer Requisitions':
+        return 'ResponseRequisition';
+      case 'Supplier Requisitions':
+        return 'RequestRequisition';
+      case 'Supplier Invoices':
+        return 'SupplierInvoice';
+      case 'Stocktakes':
+        return 'Stocktake';
+      default:
+        return '';
+    }
+  }
+
+  refreshData = (dataType) => {
+    this.setState({
+      notFinalizedCount: this.props.database
+        .objects(dataType).filtered('status != "finalised"').length,
+    });
+  }
+
+  render() {
+    const { onPressBack, LeftComponent, CentreComponent, RightComponent } = this.props;
+    return (
+      <View style={localStyles.container} >
+        <View style={localStyles.leftSection}>
+          <TouchableOpacity onPress={onPressBack} style={localStyles.backButton}>
+            {onPressBack && <Icon name={'chevron-left'} style={localStyles.backIcon} />}
+          </TouchableOpacity>
+          {LeftComponent && <BadgeSet MainElement={<LeftComponent />} finalizeValue={this.state.notFinalizedCount} popPlacement={'bottom'} mainWrapper={localStyles.badgeSetWrapper} />}
+        </View>
+        <View style={localStyles.centreSection} >
+          {CentreComponent && <CentreComponent />}
+        </View>
+        <View style={localStyles.rightSection}>
+          {RightComponent && <RightComponent />}
+        </View>
       </View>
-      <View style={localStyles.centreSection} >
-        {CentreComponent && <CentreComponent />}
-      </View>
-      <View style={localStyles.rightSection}>
-        {RightComponent && <RightComponent />}
-      </View>
-    </View>
-  );
+    );
+  }
 }
 
 NavigationBar.propTypes = {
+  database: PropTypes.object.isRequired,
   onPressBack: PropTypes.func,
   LeftComponent: PropTypes.any,
   CentreComponent: PropTypes.any,
   RightComponent: PropTypes.any,
+  currentTitle: PropTypes.string,
 };
 
 NavigationBar.defaultProps = {
@@ -40,6 +79,7 @@ NavigationBar.defaultProps = {
   LeftComponent: null,
   CentreComponent: null,
   RightComponent: null,
+  currentTitle: null,
 };
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
@@ -79,5 +119,8 @@ const localStyles = StyleSheet.create({
   rightSection: {
     ...sectionStyle,
     justifyContent: 'flex-end',
+  },
+  badgeSetWrapper: {
+    right: -60,
   },
 });

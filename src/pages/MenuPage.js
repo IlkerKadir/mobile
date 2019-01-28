@@ -33,8 +33,8 @@ export class MenuPage extends React.Component {
     );
   }
 
-  componentWillReceiveProps() {
-    this.refreshData();
+  componentWillReceiveProps(props) {
+    if (props.topRoute) this.refreshData();
   }
 
   componentWillUnmount() {
@@ -87,6 +87,7 @@ export class MenuPage extends React.Component {
                 />
               }
               finalizeValue={this.state.customerRequsitionNotFinalized}
+              mainWrapper={localStyles.badgeSetWrapper}
             />
           </View>
 
@@ -106,6 +107,7 @@ export class MenuPage extends React.Component {
                 />
               }
               finalizeValue={this.state.supplierRequsitionNotFinalized}
+              mainWrapper={localStyles.badgeSetWrapper}
             />
             <BadgeSet
               MainElement={
@@ -117,6 +119,7 @@ export class MenuPage extends React.Component {
                 />
               }
               finalizeValue={this.state.supplierRequsitionNotFinalized}
+              mainWrapper={localStyles.badgeSetWrapper}
             />
             {isInAdminMode && (
               <Button
@@ -150,6 +153,7 @@ export class MenuPage extends React.Component {
                 />
               }
               finalizeValue={this.state.stocktakesNotFinalized}
+              mainWrapper={localStyles.badgeSetWrapper}
             />
             {isInAdminMode && (
               <Button
@@ -219,5 +223,8 @@ const localStyles = StyleSheet.create({
   },
   bottomIcon: {
     color: GREY,
+  },
+  badgeSetWrapper: {
+    right: 8,
   },
 });
