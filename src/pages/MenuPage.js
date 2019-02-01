@@ -19,12 +19,12 @@ import globalStyles, { APP_FONT_FAMILY, SHADOW_BORDER, GREY, WARMER_GREY } from 
 import { navStrings } from '../localization';
 
 export class MenuPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.databaseListenerId = null;
-    this.state = {
-    };
-  }
+  state = {
+    customerRequisitionUnfinalised: 0,
+    supplierRequisitionUnfinalised: 0,
+    supplierInvoiceUnfinalised: 0,
+    stocktakesUnfinalised: 0,
+  };
 
   componentWillMount() {
     this.databaseListenerId = this.props.database.addListener(
@@ -41,15 +41,17 @@ export class MenuPage extends React.Component {
     this.props.database.removeListener(this.databaseListenerId);
   }
 
+  databaseListenerId = null;
+
   refreshData = () => {
     this.setState({
-      customerRequsitionNotFinalized: this.props.database
+      customerRequisitionUnfinalised: this.props.database
         .objects('ResponseRequisition').filtered('status != "finalised"').length,
-      supplierRequsitionNotFinalized: this.props.database
+      supplierRequisitionUnfinalised: this.props.database
         .objects('RequestRequisition').filtered('status != "finalised"').length,
-      supplierInvoiceNotFinalized: this.props.database
+      supplierInvoiceUnfinalised: this.props.database
         .objects('SupplierInvoice').filtered('status != "finalised"').length,
-      stocktakesNotFinalized: this.props.database
+      stocktakesUnfinalised: this.props.database
         .objects('Stocktake').filtered('status != "finalised"').length,
     });
   }
@@ -83,10 +85,12 @@ export class MenuPage extends React.Component {
                   style={globalStyles.menuButton}
                   textStyle={globalStyles.menuButtonText}
                   text={navStrings.customer_requisitions}
-                  onPress={() => navigateTo('customerRequisitions', navStrings.customer_requisitions)}
+                  onPress={() => navigateTo(
+                    'customerRequisitions', navStrings.customer_requisitions
+                    )}
                 />
               }
-              finalizeValue={this.state.customerRequsitionNotFinalized}
+              finalizeValue={this.state.customerRequisitionUnfinalised}
               mainWrapper={localStyles.badgeSetWrapper}
             />
           </View>
@@ -106,7 +110,7 @@ export class MenuPage extends React.Component {
                   onPress={() => navigateTo('supplierInvoices', navStrings.supplier_invoices)}
                 />
               }
-              finalizeValue={this.state.supplierRequsitionNotFinalized}
+              finalizeValue={this.state.supplierRequisitionUnfinalised}
               mainWrapper={localStyles.badgeSetWrapper}
             />
             <BadgeSet
@@ -115,10 +119,12 @@ export class MenuPage extends React.Component {
                   style={globalStyles.menuButton}
                   textStyle={globalStyles.menuButtonText}
                   text={navStrings.supplier_requisitions}
-                  onPress={() => navigateTo('supplierRequisitions', navStrings.supplier_requisitions)}
+                  onPress={() => navigateTo(
+                    'supplierRequisitions', navStrings.supplier_requisitions
+                    )}
                 />
               }
-              finalizeValue={this.state.supplierRequsitionNotFinalized}
+              finalizeValue={this.state.supplierRequisitionUnfinalised}
               mainWrapper={localStyles.badgeSetWrapper}
             />
             {isInAdminMode && (
@@ -152,7 +158,7 @@ export class MenuPage extends React.Component {
                   onPress={() => navigateTo('stocktakes', navStrings.stocktakes)}
                 />
               }
-              finalizeValue={this.state.stocktakesNotFinalized}
+              finalizeValue={this.state.stocktakesUnfinalised}
               mainWrapper={localStyles.badgeSetWrapper}
             />
             {isInAdminMode && (
