@@ -24,6 +24,7 @@ export class MenuPage extends React.Component {
     supplierRequisitionUnfinalised: 0,
     supplierInvoiceUnfinalised: 0,
     stocktakesUnfinalised: 0,
+    customInvoiceUnfinalised: 0,
   };
 
   componentWillMount() {
@@ -53,6 +54,8 @@ export class MenuPage extends React.Component {
         .objects('SupplierInvoice').filtered('status != "finalised"').length,
       stocktakesUnfinalised: this.props.database
         .objects('Stocktake').filtered('status != "finalised"').length,
+      customInvoiceUnfinalised: this.props.database
+        .objects('CustomerInvoice').filtered('status != "finalised"').length,
     });
   }
 
@@ -73,11 +76,19 @@ export class MenuPage extends React.Component {
               resizeMode="contain"
               source={require('../images/menu_people.png')}
             />
-            <Button
-              style={globalStyles.menuButton}
-              textStyle={globalStyles.menuButtonText}
-              text={navStrings.customer_invoices}
-              onPress={() => navigateTo('customerInvoices', navStrings.customer_invoices)}
+            <BadgeSet
+              MainElement={
+                <Button
+                  style={globalStyles.menuButton}
+                  textStyle={globalStyles.menuButtonText}
+                  text={navStrings.customer_invoices}
+                  onPress={() => navigateTo(
+                    'customerInvoices', navStrings.customer_invoices
+                  )}
+                />
+              }
+              unfinalisedCount={this.state.customInvoiceUnfinalised}
+              mainWrapperStyle={localStyles.badgeSetWrapper}
             />
             <BadgeSet
               MainElement={

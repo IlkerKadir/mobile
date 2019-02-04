@@ -30,6 +30,8 @@ export class NavigationBar extends React.Component {
         return 'SupplierInvoice';
       case 'stocktakes':
         return 'Stocktake';
+      case 'customerInvoices':
+        return 'CustomerInvoice';
       default:
         return '';
     }
