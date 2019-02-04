@@ -14,10 +14,12 @@ export const generalStrings = new LocalizedStrings({
     submitted: 'Submitted',
     stocktake: 'Stocktake',
     start_typing_to_search: 'Start typing to search',
+    unfinalised: 'unfinalised',
   },
   fr: {
     stocktake: 'Inventaire',
     start_typing_to_search: 'Tapez pour rechercher',
+    unfinalised: 'non finalisé',
   },
   gil: {
     stocktake: 'Warebwai',
