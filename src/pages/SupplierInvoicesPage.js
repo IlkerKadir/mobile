@@ -92,6 +92,9 @@ export class SupplierInvoicesPage extends React.Component {
     if (newSearchTerm != null) this.dataFilters.searchTerm = newSearchTerm;
     if (newSortBy != null) this.dataFilters.sortBy = newSortBy;
     if (newIsAscending != null) this.dataFilters.isAscending = newIsAscending;
+
+    // The Transaction object does not have otherPartyName key, doing this to manually map key
+    if (newSortBy === 'otherPartyName') this.dataFilters.sortBy = 'otherParty.name';
   }
 
   /**
